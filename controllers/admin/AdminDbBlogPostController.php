@@ -335,6 +335,14 @@ class AdminDbBlogPostController extends ModuleAdminController
                         )
                     ),
                 ),
+
+                array(
+                    'type' => 'date',
+                    'label' => $this->trans('Fecha de Publicación', [], 'Admin.Global'),
+                    'name' => 'publish_date',
+                    'required' => false,
+                    'hint' => $this->trans('El artículo se publicará en esta fecha.', [], 'Admin.Global'),
+                ),
                 
             ),
         );
@@ -496,4 +504,27 @@ class AdminDbBlogPostController extends ModuleAdminController
         }
     }
 
+    public function processSave()
+    {
+        $id_blog_post = Tools::getValue('id_blog_post');
+        if ($id_blog_post) {
+            $blog_post = new DbBlogPost((int)$id_blog_post);
+        } else {
+            $blog_post = new DbBlogPost();
+        }
+
+        $publish_date = Tools::getValue('publish_date');
+        
+        if ($publish_date) {
+            $blog_post->publish_date = date('Y-m-d H:i:s', strtotime($publish_date));
+        }
+
+        if (!$blog_post->save()) {
+            $this->errors[] = $this->trans('Ocurrió un error al guardar el post.', [], 'Admin.Notifications.Error');
+        } else {
+            $this->confirmations[] = $this->trans('El post se ha guardado correctamente.', [], 'Admin.Notifications.Success');
+        }
+
+        parent::processSave(); 
+    }
 }

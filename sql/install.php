@@ -65,6 +65,7 @@ $sql[] = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'dbblog_post` (
             `active` tinyint(1) unsigned NOT NULL DEFAULT \'0\',
             `date_add` datetime NOT NULL,
             `date_upd` datetime NOT NULL,
+            `publish_date` datetime NULL,
             PRIMARY KEY (`id_dbblog_post`)
         ) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8;';
 

@@ -47,6 +47,7 @@ class DbBlogPost extends ObjectModel
             'meta_title' =>	        array('type' => self::TYPE_STRING, 'lang' => true, 'required' => false , 'validate' => 'isCleanHtml', 'size' => 128),
             'meta_description' =>	array('type' => self::TYPE_STRING, 'lang' => true, 'required' => false , 'validate' => 'isCleanHtml', 'size' => 255),
             'image' =>			    array('type' => self::TYPE_STRING, 'lang' => true, 'required' => false , 'validate' => 'isCleanHtml', 'size' => 128),
+            'publish_date' =>   array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat', 'required' => false),
         ),
     );
 
@@ -124,6 +125,16 @@ class DbBlogPost extends ObjectModel
             $authors[$row['id_dbaboutus_author']]['url'] = self::getLink_author($row['link_rewrite']);
         }
         return $authors;
+    }
+
+    public static function getPublishedPosts($id_lang)
+    {
+        $sql = 'SELECT * FROM '._DB_PREFIX_.'dbblog_post
+                WHERE p.publish_date <= NOW()
+                AND p.active = 1
+                AND p.id_lang = '.(int)$id_lang;
+            
+        return Db::getInstance()->executeS($sql);
     }
 
     public static function getAuthorById($id_author)
